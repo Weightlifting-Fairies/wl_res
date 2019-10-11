@@ -1,0 +1,77 @@
+# -*- coding: utf-8 -*-
+import scrapy
+from scrapy import Spider
+from scrapy.http import Request
+
+
+class LinkItem(scrapy.Item):
+    link = scrapy.Field()
+
+class OldBw2018Spider(scrapy.Spider):
+    name = 'old_bw_2018'
+    allowed_domains = ['iwf.net/']
+    start_urls = ['http://www.iwf.net/results/results-by-events/?event_year=%d/' %i for i in range(2018, 2016, -1)]
+
+
+    def parse(self, response):
+        events = response.xpath('//td[2]/a/@href').extract() 
+        for event in events:
+            item = LinkItem()
+            item['link']= response.urljoin(event)
+            yield item     
+
+
+
+# -*- coding: utf-8 -*-
+import scrapy
+from scrapy import Spider
+from scrapy.http import Request
+
+
+class LinkItem(scrapy.Item):
+    link = scrapy.Field()
+
+class OldBw2018Spider(scrapy.Spider):
+    name = 'old_bw_2018'
+    allowed_domains = ['iwf.net/']
+    start_urls = ['http://www.iwf.net/results/results-by-events/?event_year=%d/' %i for i in range(2018, 2016, -1)]
+
+
+    def parse(self, response):
+        events = response.xpath('//td[2]/a/@href/text()').extract() 
+        for event in events:
+            item = LinkItem()
+            item['link']= response.urljoin(event)
+            yield item     
+
+
+
+
+
+
+
+# -*- coding: utf-8 -*-
+import scrapy
+from scrapy import Spider
+from scrapy.http import Request
+
+
+class LinkItem(scrapy.Item):
+    link = scrapy.Field()
+
+class OldBw2018Spider(scrapy.Spider):
+    name = 'old_bw_2018'
+    allowed_domains = ['iwf.net/']
+    start_urls = ['http://www.iwf.net/results/results-by-events/?event_year=2018']
+
+
+    def parse(self, response):
+        events = response.xpath('//td[2]/a/@href').extract() 
+        for event in events:
+            item = LinkItem()
+            item['link'] = response.urljoin(event)
+            yield item     
+
+
+        
+   

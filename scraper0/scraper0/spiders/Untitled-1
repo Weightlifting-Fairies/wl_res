@@ -1,0 +1,198 @@
+
+'id': id
+'pid': pid
+'gender': gender
+'rank': rank
+'rank_s': rank_s
+'rank_cj': rank_cj
+'name': name
+'born': born
+'nation': nation
+'category': category
+'bweight': bweight
+'snatch1': snatch1
+'snatch2': snatch2
+'snatch3': snatch3
+'snatch': snatch
+'jerk1': jerk1
+'jerk2': jerk2
+'jerk3': jerk3
+'jerk': jerk
+'total': total
+'event': event
+'date': date
+
+
+        yield {
+            'event_name': event_name,
+            'pid': pid,
+            'gender': gender,
+            'rank': rank,
+            'rank_s': rank_s,
+            'rank_cj': rank_cj,
+            'name': name,
+            'born': born,
+            'nation': nation,
+            'category': category,
+            'bweight': bweight,
+            'snatch1': snatch1,
+            'snatch2': snatch2,
+            'snatch3': snatch3,
+            'snatch': snatch,
+            'jerk1': jerk1,
+            'jerk2': jerk2,
+            'jerk3': jerk3,
+            'jerk': jerk,
+            'total': total,
+            'event': event,
+            'date': date,
+        }
+
+
+
+# -*- coding: utf-8 -*-
+import scrapy
+import time
+from selenium import webdriver         
+from scrapy.selector import Selector
+from selenium.webdriver.common.keys import Keys
+from selenium.webdriver.chrome.options import Options
+from scrapy.http import Request
+from selenium import webdriver
+from selenium.webdriver.common.by import By
+from selenium.webdriver.support.ui import WebDriverWait
+from selenium.webdriver.support import expected_conditions as EC
+import time
+import sys
+from lxml.html import fromstring,tostring
+
+
+class Results2019Spider(scrapy.Spider):
+    name = 'results2019'
+    allowed_domains = ['iwf.net/new_bw/results_by_events/']
+
+    def start_requests(self):
+        self.driver = webdriver.Chrome('/home/cjw/Desktop/chromedriver') 
+        self.driver.get('https://www.iwf.net/new_bw/results_by_events/?event_year=2019/')
+
+        sel = Selector(text=self.driver.page_source)
+        #events = sel.xpath('//*[@id="events_table"]/tbody/tr[1]/td[2]/a')
+        #size = len(sel.xpath('//*[@id="events_table"]/tbody/tr[1]'))
+        table_tr = sel.xpath('//*[@id="events_table"]/tbody/tr')
+        #table_tr = self.driver.find_elements_by_xpath('//*[@id="events_table"]/tbody/tr')
+        #for tr in table_tr:
+            #a = tr.xpath("//a/@href")
+            #if a:
+                #print("hello")
+            
+
+            #event = sel.xpath('//*[@id="events_table"]/tbody/tr[1]/td[2]/a')
+            #url = 'https://www.iwf.net/new_bw/results_by_events/?event_year=2019/' + events
+            #yield Request(a, callback=self.parse_event)
+
+
+
+    def parse_event(self, response):
+        pass
+
+
+
+# -*- coding: utf-8 -*-
+import scrapy
+import time
+from selenium import webdriver         
+from scrapy.selector import Selector
+from selenium.webdriver.common.keys import Keys
+from selenium.webdriver.chrome.options import Options
+from scrapy.http import Request
+from selenium import webdriver
+from selenium.webdriver.common.by import By
+from selenium.webdriver.support.ui import WebDriverWait
+from selenium.webdriver.support import expected_conditions as EC
+import time
+import sys
+from lxml.html import fromstring,tostring
+
+
+class Results2019Spider(scrapy.Spider):
+    name = 'results2019'
+    allowed_domains = ['iwf.net/new_bw/results_by_events/']
+    start_urls = ['https://www.iwf.net/new_bw/results_by_events/?event_year=2019/']
+
+    def parse(self, response):
+        events = response.xpath('//*[@id="events_table"]/tbody').extract()
+        for event in events:
+            absolute_url = response.urljoin(event)
+            yield Request(absolute_url, callback=self.parse_event)
+
+    def parse_event(self, response):
+        pass
+
+
+
+# -*- coding: utf-8 -*-
+import scrapy
+from scrapy.http import Request
+
+
+
+class Results2019Spider(scrapy.Spider):
+    name = 'results2019'
+    allowed_domains = ['iwf.net/new_bw/results_by_events/']
+    start_urls = ['https://www.iwf.net/new_bw/results_by_events/?event_year=2019/']
+
+    def parse(self, response):
+        table = response.xpath('//*[@id="events_table"]/tbody').extract()
+
+        response.xpath('//td[2]/a/@href').extract() 
+
+        for tds in table:
+            td = response.xpath('//tr').extract()
+            for event in td:
+                links = response.xpath('//td[2]/a/@href').extract()
+                for link in links:
+                    absolute_url = response.urljoin(link)
+                    yield Request(absolute_url, callback=self.parse_event)
+
+        #for tr in table:
+            #td = response.xpath('//td[2]/a/@href').extract()
+            #for a in td:
+                #absolute_url = response.urljoin(a)
+                #yield Request(absolute_url, callback=self.parse_event)
+
+    def parse_event(self, response):
+        pass
+
+
+
+
+
+
+# -*- coding: utf-8 -*-
+import scrapy
+from selenium import webdriver         
+from scrapy.selector import Selector
+from selenium.webdriver.common.keys import Keys
+
+driver = webdriver.Chrome('/home/cjw/Desktop/chromedriver') 
+
+
+
+class A2019worldsSpider(scrapy.Spider):
+    name = '2019worlds'
+    allowed_domains = ['iwf.net/new_bw/results_by_events/']
+
+    def start_requests(self):
+        self.driver = webdriver.Chrome('/home/cjw/Desktop/chromedriver') 
+        self.driver.get('https://iwf.net/new_bw/results_by_events/?event=472/')
+        sel = Selector()
+
+        return super().start_requests()
+
+    def parse(self, response):
+        pass
+
+
+
+
+
