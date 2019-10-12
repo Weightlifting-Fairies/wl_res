@@ -1,9 +1,12 @@
 # -*- coding: utf-8 -*-
+import re
 import scrapy
 from scrapy import Spider
 
+
 class LinkItem(scrapy.Item):
-    link = scrapy.Field()
+    #link = scrapy.Field()
+    download_link = scrapy.Field()
 
 class OldBw2018Spider(scrapy.Spider):
     name = 'old_bw_2018'
@@ -14,8 +17,14 @@ class OldBw2018Spider(scrapy.Spider):
         events = response.xpath('//td[2]/a/@href').extract() 
         for event in events:
             item = LinkItem()
-            item['link'] = response.urljoin(event)
-            yield item     
+            #item['link'] = response.urljoin(event)
+
+            #Generate csv download link
+            event_num = response.urljoin(event)
+            match = re.compile(r"(event=.*)").findall(event_num)
+            #item['download_link'] = 'https://www.iwf.net/wp-content/themes/iwf/results_export_newbw.php?' + ''.join(match)
+            item['download_link'] = 'https://www.iwf.net/wp-content/themes/iwf/results_export.php?'+ ''.join(match)
+            yield item
 
 
         

@@ -1,0 +1,70 @@
+# -*- coding: utf-8 -*-
+import scrapy
+from scrapy import Spider
+import re
+
+class LinkItem(scrapy.Item):
+    link = scrapy.Field()
+    download_link = scrapy.Field()
+
+class NewBw2019Spider(scrapy.Spider):
+    name = 'new_bw_2019'
+    allowed_domains = ['iwf.net/']
+    start_urls = ['https://www.iwf.net/new_bw/results_by_events/?event_year=201%d/' %i for i in range(9, 7, -1)]
+    #start_urls = ['https://www.iwf.net/new_bw/results_by_events/?event_year=201' + str(x) for x in range(9, 7, -1)]
+
+    def parse(self, response):
+        events = response.xpath('//td[2]/a/@href').extract() 
+        for event in events:
+            item = LinkItem()
+            item['link'] = response.urljoin(event)
+            #(event=.*)
+            #string = re.match("(event=.*)", item['link'])
+            #item['download_link'] =   str(re.match("(event=.*)", item['link']))
+            yield item      
+            #print(string)
+            #print(item['link'])
+            #s = re.match("(event=.*)", item['link'])
+            #print(s)
+            #print(item['download_link'])
+            string = response.urljoin(event)
+            re_str1 = r"(event=.*)"
+            re_pattern = re.compile(re_str1 )
+            match = re_pattern.findall(string)
+            print(match)
+
+            #item['download_link'] = 'https://www.iwf.net/wp-content/themes/iwf/results_export_newbw.php?event=472' + match
+            
+
+
+
+# -*- coding: utf-8 -*-
+import scrapy
+from scrapy import Spider
+import re
+
+class LinkItem(scrapy.Item):
+    link = scrapy.Field()
+    download_link = scrapy.Field()
+
+class NewBw2019Spider(scrapy.Spider):
+    name = 'new_bw_2019'
+    allowed_domains = ['iwf.net/']
+    start_urls = ['https://www.iwf.net/new_bw/results_by_events/?event_year=201%d/' %i for i in range(9, 7, -1)]
+
+    def parse(self, response):
+        events = response.xpath('//td[2]/a/@href').extract() 
+        for event in events:
+            item = LinkItem()
+            item['link'] = response.urljoin(event)
+       
+    
+            string = response.urljoin(event)
+            re_str1 = r"(event=.*)"
+            re_pattern = re.compile(re_str1 )
+            match = re_pattern.findall(string)
+            
+            item['download_link'] = 'https://www.iwf.net/wp-content/themes/iwf/results_export_newbw.php?' + ''.join(match)
+
+            #item['download_link'] = 'https://www.iwf.net/wp-content/themes/iwf/results_export_newbw.php?event=472' + match
+            yield item
